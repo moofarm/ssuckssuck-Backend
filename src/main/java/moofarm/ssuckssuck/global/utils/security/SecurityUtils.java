@@ -1,4 +1,4 @@
-package moofarm.ssuckssuck.global.utils;
+package moofarm.ssuckssuck.global.utils.security;
 
 import moofarm.ssuckssuck.global.exception.UserNotFoundException;
 import org.springframework.security.core.Authentication;
