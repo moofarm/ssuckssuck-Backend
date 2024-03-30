@@ -28,3 +28,11 @@ oauth:
     scope:
       - profile_nickname
       - account_email
+  naver:
+    client-id: ${NAVER_CLIENT_ID}
+    redirect-uri: ${NAVER_REDIRECT_URI}
+    client-secret: ${NAVER_CLIENT_SECRET}
+    state: ${NAVER_STATE}
+    scope:
+      - name
+      - email
