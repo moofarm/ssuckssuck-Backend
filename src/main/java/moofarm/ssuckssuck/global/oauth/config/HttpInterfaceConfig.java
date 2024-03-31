@@ -1,5 +1,6 @@
 package moofarm.ssuckssuck.global.oauth.config;
 
+import moofarm.ssuckssuck.global.oauth.google.client.GoogleApiClient;
 import moofarm.ssuckssuck.global.oauth.kakao.client.KakaoApiClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,8 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
 public class HttpInterfaceConfig {
+    @Bean
+    public GoogleApiClient googleApiClient() {return createHttpInterface(GoogleApiClient.class);}
 
     @Bean
     public KakaoApiClient kakaoApiClient() {
