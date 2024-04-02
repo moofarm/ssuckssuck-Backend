@@ -12,6 +12,14 @@ spring:
         format_sql: ture
         dialect:
 
+auth:
+  jwt:
+    secretKey: ${JWT_SECRET_KEY}
+    accessExp: ${JWT_ACCESS_EXP}
+    refreshExp: ${JWT_REFRESH_EXP}
+    header: ${JWT_HEADER}
+    prefix: ${JWT_PREFIX}
+
 oauth:
   kakao:
     client-id: ${KAKAO_CLIENT_ID}
@@ -20,6 +28,7 @@ oauth:
     scope:
       - profile_nickname
       - account_email
+
   google:
     client-id: ${GOOGLE_CLIENT_ID}
     client-secret: ${GOOGLE_CLIENT_SECRET}
@@ -27,3 +36,25 @@ oauth:
     scope:
       - profile
       - email
+
+  naver:
+    client-id: ${NAVER_CLIENT_ID}
+    redirect-uri: ${NAVER_REDIRECT_URI}
+    client-secret: ${NAVER_CLIENT_SECRET}
+    state: ${NAVER_STATE}
+    scope:
+      - name
+      - email
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    path: ${SWAGGER_PATH}
+    disable-swagger-default-url: true
+    display-request-duration: true
+  paths-to-match: /**
+
