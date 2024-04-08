@@ -10,8 +10,12 @@ import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
 import moofarm.ssuckssuck.domain.oauth.domain.repository.OauthMemberRepository;
 import moofarm.ssuckssuck.domain.oauth.presentation.dto.request.OauthLoginRequest;
 import moofarm.ssuckssuck.domain.oauth.presentation.dto.response.OauthLoginResponse;
+import moofarm.ssuckssuck.domain.user.domain.User;
+import moofarm.ssuckssuck.domain.user.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class OauthService {
     private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
     private final OauthMemberClientComposite oauthMemberClientComposite;
     private final OauthMemberRepository oauthMemberRepository;
+    private final UserRepository userRepository;
 
     public String getAuthCodeRequestUrl(OauthServerType oauthServerType) {
         return authCodeRequestUrlProviderComposite.provide(oauthServerType);
@@ -32,6 +37,10 @@ public class OauthService {
         OauthMember saved = oauthMemberRepository.findByOauthServerTypeAndEmail(oauthMember.getOauthServerType(), oauthMember.getEmail())
                 .orElseGet(() -> oauthMemberRepository.save(oauthMember));
 
-        return new OauthLoginResponse(saved.getOauthMemberInfo(), false);
+        Optional<User> user = userRepository.findByOauthServerTypeAndEmail(saved.getOauthServerType(), saved.getEmail());
+
+        return user.map(u -> new OauthLoginResponse(saved.getOauthMemberInfo(), false))
+                .orElse(new OauthLoginResponse(saved.getOauthMemberInfo(), true));
     }
+
 }
