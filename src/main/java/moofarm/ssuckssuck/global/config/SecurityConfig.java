@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/api/signup").permitAll()
                         .requestMatchers("api/nick/{nickname}").permitAll()
+                        .requestMatchers("api/up").permitAll()
                         .requestMatchers(SwaggerPatterns).permitAll()
                         .anyRequest().authenticated()
 
