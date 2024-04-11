@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import moofarm.ssuckssuck.domain.character.domain.Avatar;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
 import moofarm.ssuckssuck.domain.user.domain.vo.UserInfoVO;
 import moofarm.ssuckssuck.global.common.MainCategory;
@@ -39,17 +40,22 @@ public class User extends BaseEntity {
     @Enumerated(STRING)
     private SubCategory subCategory;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "avatar_id")
+    private Avatar avatar;
+
     @Builder
-    public User(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory) {
+    public User(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory, Avatar avatar) {
         this.name = name;
         this.email = email;
         this.nickname = nickname;
         this.oauthServerType = oauthServerType;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
+        this.avatar = avatar;
     }
 
-    public static User createUser(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory) {
+    public static User createUser(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory, Avatar avatar) {
         return builder()
                 .name(name)
                 .email(email)
@@ -57,6 +63,7 @@ public class User extends BaseEntity {
                 .oauthServerType(oauthServerType)
                 .mainCategory(mainCategory)
                 .subCategory(subCategory)
+                .avatar(avatar)
                 .build();
     }
 
@@ -68,12 +75,17 @@ public class User extends BaseEntity {
                 nickname,
                 oauthServerType,
                 mainCategory,
-                subCategory
+                subCategory,
+                avatar.getAvatarInfoVO()
         );
     }
 
     public void updateCategory(MainCategory mainCategory, SubCategory subCategory) {
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
+    }
+
+    public void changeAvatar(Avatar newAvatar) {
+        this.avatar = newAvatar;
     }
 }
