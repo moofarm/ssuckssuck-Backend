@@ -7,7 +7,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import lombok.*;
 import moofarm.ssuckssuck.domain.group.domain.vo.GroupInfoVO;
-import moofarm.ssuckssuck.domain.user.domain.User;
 import moofarm.ssuckssuck.global.common.MainCategory;
 import moofarm.ssuckssuck.global.common.SubCategory;
 
@@ -16,6 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@Table(name = "MissionRoom")
 @NoArgsConstructor(access = PROTECTED)
 public class Group {
 
@@ -24,8 +24,10 @@ public class Group {
     @Column(name = "group_id")
     private Long id;
 
-    //@Column(name = "user_id")
-    //private User user;
+
+    @OneToMany(mappedBy = "group")
+    private Mission mission;
+
     private String title;
     private String description;
     private int participantsCount;
@@ -42,10 +44,12 @@ public class Group {
         this.participantsCount = participantsCount;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
+
     }
 
     public GroupInfoVO getGroupInfo() {
         return new GroupInfoVO(
+                id,
                 title,
                 description,
                 participantsCount,
@@ -63,4 +67,7 @@ public class Group {
                 .subCategory(subCategory)
                 .build();
     }
+    public void addParticipant() {this.participantsCount++;}
+    public void subtractParticipant() {this.participantsCount--;}
+
 }
