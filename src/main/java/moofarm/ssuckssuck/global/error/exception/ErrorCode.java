@@ -21,9 +21,12 @@ public enum ErrorCode{
 
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(404, "해당하는 정보의 사용자를 찾을 수 없습니다."),
+    GROUP_NOT_FOUND(404, "해당하는 정보의 미션방을 찾을 수 없습니다."),
+
 
     /* 409 Conflict : 사용자의 요청이 서버의 상태와 충돌 */
     NICKNAME_DUPLICATION(409, "닉네임이 중복됩니다."),
+
 
     /* 500 SERVER_ERROR */
     INTERNAL_SERVER_ERROR(500, "서버 에러입니다.");
