@@ -9,6 +9,7 @@ import lombok.*;
 import moofarm.ssuckssuck.domain.group.domain.vo.GroupInfoVO;
 import moofarm.ssuckssuck.global.common.MainCategory;
 import moofarm.ssuckssuck.global.common.SubCategory;
+import moofarm.ssuckssuck.global.database.BaseEntity;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -17,16 +18,16 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @Table(name = "MissionRoom")
 @NoArgsConstructor(access = PROTECTED)
-public class Group {
+public class Group extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "group_id")
     private Long id;
 
-
-    @OneToMany(mappedBy = "group")
-    private Mission mission;
+//
+//    @OneToMany(mappedBy = "group")
+//    private Mission mission;
 
     private String title;
     private String description;
