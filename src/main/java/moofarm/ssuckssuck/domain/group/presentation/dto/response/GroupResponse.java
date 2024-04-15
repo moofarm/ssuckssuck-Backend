@@ -14,6 +14,7 @@ public record GroupResponse(
         SubCategory subCategory
 ){
     public GroupResponse(GroupInfoVO groupInfoVO) {
-        this(groupInfoVO.id(), groupInfoVO.title(), groupInfoVO.description(), groupInfoVO.participantsCount(), groupInfoVO.mainCategory(), groupInfoVO.subCategory());
+        this(groupInfoVO.id(), groupInfoVO.title(), groupInfoVO.description(), groupInfoVO.participantsCount(),
+                groupInfoVO.mainCategory(), groupInfoVO.subCategory());
     }
 }
