@@ -1,6 +1,6 @@
-package moofarm.ssuckssuck.domain.character.domain.vo;
+package moofarm.ssuckssuck.domain.avatar.domain.vo;
 
-import moofarm.ssuckssuck.domain.character.domain.Grade;
+import moofarm.ssuckssuck.domain.avatar.domain.Grade;
 
 import java.time.LocalDate;
 

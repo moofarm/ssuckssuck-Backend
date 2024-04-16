@@ -1,15 +1,19 @@
 package moofarm.ssuckssuck.domain.group.domain;
 
-import com.sun.tools.javac.Main;
 import jakarta.persistence.*;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import lombok.*;
 import moofarm.ssuckssuck.domain.group.domain.vo.GroupInfoVO;
+import moofarm.ssuckssuck.domain.misson.domain.Mission;
 import moofarm.ssuckssuck.global.common.MainCategory;
 import moofarm.ssuckssuck.global.common.SubCategory;
 import moofarm.ssuckssuck.global.database.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -33,6 +37,9 @@ public class Group extends BaseEntity {
     private MainCategory mainCategory;
     @Enumerated(EnumType.STRING)
     private SubCategory subCategory;
+
+    @OneToMany(mappedBy = "group", cascade = ALL)
+    private List<Mission> missionList = new ArrayList<>();
 
     @Builder
     public Group(String title, String description, int participantsCount, MainCategory mainCategory, SubCategory subCategory) {
