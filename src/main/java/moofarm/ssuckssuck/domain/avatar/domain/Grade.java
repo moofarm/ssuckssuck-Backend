@@ -1,4 +1,4 @@
-package moofarm.ssuckssuck.domain.character.domain;
+package moofarm.ssuckssuck.domain.avatar.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

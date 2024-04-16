@@ -3,8 +3,8 @@ package moofarm.ssuckssuck.domain.user.service;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moofarm.ssuckssuck.domain.character.domain.Avatar;
-import moofarm.ssuckssuck.domain.character.service.AvatarServiceUtils;
+import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
+import moofarm.ssuckssuck.domain.avatar.service.AvatarServiceUtils;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthMember;
 import moofarm.ssuckssuck.domain.oauth.domain.repository.OauthMemberRepository;
 import moofarm.ssuckssuck.domain.user.exception.NicknameDuplicationException;
@@ -52,7 +52,6 @@ public class UserService {
                 signupRequest.nickname(),
                 signupRequest.oauthServerType(),
                 signupRequest.mainCategory(),
-                signupRequest.subCategory()
                 signupRequest.subCategory(),
                 avatar
         );
