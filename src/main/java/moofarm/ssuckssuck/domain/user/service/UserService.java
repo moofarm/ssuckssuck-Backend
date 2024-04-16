@@ -3,6 +3,8 @@ package moofarm.ssuckssuck.domain.user.service;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import moofarm.ssuckssuck.domain.character.domain.Avatar;
+import moofarm.ssuckssuck.domain.character.service.AvatarServiceUtils;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthMember;
 import moofarm.ssuckssuck.domain.oauth.domain.repository.OauthMemberRepository;
 import moofarm.ssuckssuck.domain.user.exception.NicknameDuplicationException;
@@ -33,6 +35,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final OauthMemberRepository oauthMemberRepository;
     private final UserUtils userUtils;
+    private final AvatarServiceUtils avatarServiceUtils;
     private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
@@ -41,6 +44,7 @@ public class UserService {
         if (userRepository.existsByNickname(signupRequest.nickname())) {
             throw NicknameDuplicationException.EXCEPTION;
         }
+        Avatar avatar = avatarServiceUtils.createAvatar();
 
         User user = User.createUser(
                 signupRequest.name(),
@@ -49,6 +53,8 @@ public class UserService {
                 signupRequest.oauthServerType(),
                 signupRequest.mainCategory(),
                 signupRequest.subCategory()
+                signupRequest.subCategory(),
+                avatar
         );
 
         userRepository.save(user);

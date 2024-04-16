@@ -28,6 +28,9 @@ public enum ErrorCode{
     NICKNAME_DUPLICATION(409, "닉네임이 중복됩니다."),
 
 
+    /* 409 Conflict : 사용자의 요청이 서버의 상태와 충돌 */
+    NICKNAME_DUPLICATION(409, "닉네임이 중복됩니다."),
+
     /* 500 SERVER_ERROR */
     INTERNAL_SERVER_ERROR(500, "서버 에러입니다.");
 

@@ -1,5 +1,6 @@
 package moofarm.ssuckssuck.domain.user.presentation.dto.response;
 
+import moofarm.ssuckssuck.domain.character.domain.vo.AvatarInfoVO;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
 import moofarm.ssuckssuck.global.common.MainCategory;
 import moofarm.ssuckssuck.global.common.SubCategory;
@@ -16,5 +17,11 @@ public record UserProfileResponse(
     public UserProfileResponse(UserInfoVO userInfoVO) {
         this(userInfoVO.email(), userInfoVO.name(), userInfoVO.nickname(), userInfoVO.oauthServerType(),
                 userInfoVO.mainCategory(), userInfoVO.subCategory());
+        SubCategory subCategory,
+        AvatarInfoVO avatarInfoVO
+) {
+    public UserProfileResponse(UserInfoVO userInfoVO) {
+        this(userInfoVO.email(), userInfoVO.name(), userInfoVO.nickname(), userInfoVO.oauthServerType(),
+                userInfoVO.mainCategory(), userInfoVO.subCategory(), userInfoVO.avatarInfoVO());
     }
 }

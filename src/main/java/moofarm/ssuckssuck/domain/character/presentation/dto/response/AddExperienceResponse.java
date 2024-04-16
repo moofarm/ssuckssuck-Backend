@@ -1,24 +1,22 @@
-package moofarm.ssuckssuck.domain.user.presentation.dto.response;
+package moofarm.ssuckssuck.domain.character.presentation.dto.response;
 
 import moofarm.ssuckssuck.domain.character.domain.vo.AvatarInfoVO;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
+import moofarm.ssuckssuck.domain.user.domain.vo.UserInfoVO;
 import moofarm.ssuckssuck.global.common.MainCategory;
 import moofarm.ssuckssuck.global.common.SubCategory;
-import moofarm.ssuckssuck.domain.user.domain.vo.UserInfoVO;
 
-public record SignUpResponse (
+public record AddExperienceResponse(
         String email,
         String name,
         String nickname,
         OauthServerType oauthServerType,
         MainCategory mainCategory,
         SubCategory subCategory,
-        AvatarInfoVO avatarInfoVO,
-        Boolean isFirst
+        AvatarInfoVO avatarInfoVO
 ) {
-    public SignUpResponse(UserInfoVO userInfoVO, Boolean isFirst) {
+    public AddExperienceResponse(UserInfoVO userInfoVO) {
         this(userInfoVO.email(), userInfoVO.name(), userInfoVO.nickname(), userInfoVO.oauthServerType(),
-                userInfoVO.mainCategory(), userInfoVO.subCategory(), isFirst);
-                userInfoVO.mainCategory(), userInfoVO.subCategory(), userInfoVO.avatarInfoVO(), isFirst);
+                userInfoVO.mainCategory(), userInfoVO.subCategory(), userInfoVO.avatarInfoVO());
     }
 }
