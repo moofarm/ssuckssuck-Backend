@@ -52,6 +52,7 @@ public class UserService {
                 signupRequest.nickname(),
                 signupRequest.oauthServerType(),
                 signupRequest.mainCategory(),
+                signupRequest.subCategory()
                 signupRequest.subCategory(),
                 avatar
         );

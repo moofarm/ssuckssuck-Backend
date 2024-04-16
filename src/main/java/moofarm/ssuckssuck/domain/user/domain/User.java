@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import moofarm.ssuckssuck.domain.character.domain.Avatar;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
 import moofarm.ssuckssuck.domain.user.domain.vo.UserInfoVO;
@@ -40,6 +41,9 @@ public class User extends BaseEntity {
     @Enumerated(STRING)
     private SubCategory subCategory;
 
+    @Builder
+    public User(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory) {
+      
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "avatar_id")
     private Avatar avatar;
@@ -52,6 +56,10 @@ public class User extends BaseEntity {
         this.oauthServerType = oauthServerType;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
+
+    }
+
+    public static User createUser(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory) {
         this.avatar = avatar;
     }
 
@@ -75,6 +83,7 @@ public class User extends BaseEntity {
                 nickname,
                 oauthServerType,
                 mainCategory,
+                subCategory
                 subCategory,
                 avatar.getAvatarInfoVO()
         );

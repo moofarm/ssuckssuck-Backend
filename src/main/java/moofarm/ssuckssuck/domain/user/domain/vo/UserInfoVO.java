@@ -13,6 +13,7 @@ public record UserInfoVO(
         String nickname,
         OauthServerType oauthServerType,
         MainCategory mainCategory,
+        SubCategory subCategory
         SubCategory subCategory,
         AvatarInfoVO avatarInfoVO
 ) {
