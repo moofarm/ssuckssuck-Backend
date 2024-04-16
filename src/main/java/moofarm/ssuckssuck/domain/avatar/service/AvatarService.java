@@ -1,11 +1,11 @@
-package moofarm.ssuckssuck.domain.character.service;
+package moofarm.ssuckssuck.domain.avatar.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moofarm.ssuckssuck.domain.character.domain.Avatar;
-import moofarm.ssuckssuck.domain.character.domain.Grade;
-import moofarm.ssuckssuck.domain.character.domain.repository.AvatarRepository;
-import moofarm.ssuckssuck.domain.character.presentation.dto.response.AddExperienceResponse;
+import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
+import moofarm.ssuckssuck.domain.avatar.domain.Grade;
+import moofarm.ssuckssuck.domain.avatar.domain.repository.AvatarRepository;
+import moofarm.ssuckssuck.domain.avatar.presentation.dto.response.AddExperienceResponse;
 import moofarm.ssuckssuck.domain.user.domain.User;
 import moofarm.ssuckssuck.global.utils.user.UserUtils;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
-import static moofarm.ssuckssuck.domain.character.domain.Grade.RADISH;
+import static moofarm.ssuckssuck.domain.avatar.domain.Grade.RADISH;
 
 @Slf4j
 @Service

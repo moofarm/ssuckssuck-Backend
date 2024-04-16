@@ -1,6 +1,6 @@
-package moofarm.ssuckssuck.domain.character.presentation.dto.response;
+package moofarm.ssuckssuck.domain.avatar.presentation.dto.response;
 
-import moofarm.ssuckssuck.domain.character.domain.vo.AvatarInfoVO;
+import moofarm.ssuckssuck.domain.avatar.domain.vo.AvatarInfoVO;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
 import moofarm.ssuckssuck.domain.user.domain.vo.UserInfoVO;
 import moofarm.ssuckssuck.global.common.MainCategory;

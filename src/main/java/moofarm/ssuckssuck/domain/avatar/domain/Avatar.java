@@ -1,4 +1,4 @@
-package moofarm.ssuckssuck.domain.character.domain;
+package moofarm.ssuckssuck.domain.avatar.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -7,15 +7,15 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import moofarm.ssuckssuck.domain.character.domain.vo.AvatarInfoVO;
+import moofarm.ssuckssuck.domain.avatar.domain.vo.AvatarInfoVO;
 
 import java.time.LocalDate;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
-import static moofarm.ssuckssuck.domain.character.domain.Grade.SEED;
-import static moofarm.ssuckssuck.domain.character.domain.Grade.SPROUT;
+import static moofarm.ssuckssuck.domain.avatar.domain.Grade.SEED;
+import static moofarm.ssuckssuck.domain.avatar.domain.Grade.SPROUT;
 
 @Entity
 @Getter
