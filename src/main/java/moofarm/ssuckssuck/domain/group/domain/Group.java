@@ -25,10 +25,6 @@ public class Group extends BaseEntity {
     @Column(name = "group_id")
     private Long id;
 
-//
-//    @OneToMany(mappedBy = "group")
-//    private Mission mission;
-
     private String title;
     private String description;
     private int participantsCount;
@@ -45,7 +41,6 @@ public class Group extends BaseEntity {
         this.participantsCount = participantsCount;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
-
     }
 
     public GroupInfoVO getGroupInfo() {
