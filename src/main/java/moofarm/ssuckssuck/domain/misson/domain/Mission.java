@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import moofarm.ssuckssuck.domain.certification.domain.Certification;
 import moofarm.ssuckssuck.domain.group.domain.Group;
 import moofarm.ssuckssuck.domain.misson.domain.vo.MissionInfoVO;
 import moofarm.ssuckssuck.domain.misson.exception.UserIsNotMissionHostException;
@@ -11,6 +12,8 @@ import moofarm.ssuckssuck.domain.user.domain.User;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -32,6 +35,9 @@ public class Mission {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
+
+    @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
+    private List<Certification> certificationList = new ArrayList<>();
 
     private LocalDate dueDate;
     private boolean bookmark;
@@ -92,7 +98,7 @@ public class Mission {
     }
 
     public void updateMissionStatus() {
-        this.missionStatus = !this.missionStatus;
+        this.missionStatus = true;
     }
 
     public void resetMissionStatus() {
