@@ -19,11 +19,13 @@ public enum ErrorCode{
     /* 403 Forbidden : 권한이 없음 */
     REGISTER_EXPIRED_TOKEN(403, "만료된 리프레쉬 토큰입니다."),
     NOT_HOST_MISSION(403, "해당하는 미션의 권한이 없습니다."),
+    NOT_OWNER_CERTIFICATION(403, "해당하는 미션 인증의 접근 권한이 없습니다."),
 
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(404, "해당하는 정보의 사용자를 찾을 수 없습니다."),
     MISSION_NOT_FOUND(404, "해당하는 정보의 미션을 찾을 수 없습니다."),
     GROUP_NOT_FOUND(404, "해당하는 정보의 미션방을 찾을 수 없습니다."),
+    CERTIFICATION_NOT_FOUND(404, "해당하는 미션 인증 이미지를 찾을 수 없습니다."),
 
     /* 409 Conflict : 사용자의 요청이 서버의 상태와 충돌 */
     NICKNAME_DUPLICATION(409, "닉네임이 중복됩니다."),

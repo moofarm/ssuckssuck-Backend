@@ -6,11 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
+import moofarm.ssuckssuck.domain.certification.domain.Certification;
+import moofarm.ssuckssuck.domain.misson.domain.Mission;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthServerType;
 import moofarm.ssuckssuck.domain.user.domain.vo.UserInfoVO;
 import moofarm.ssuckssuck.global.common.MainCategory;
 import moofarm.ssuckssuck.global.common.SubCategory;
 import moofarm.ssuckssuck.global.database.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -44,6 +49,12 @@ public class User extends BaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "avatar_id")
     private Avatar avatar;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Mission> missionList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Certification> certificationList = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String nickname, OauthServerType oauthServerType, MainCategory mainCategory, SubCategory subCategory, Avatar avatar) {
