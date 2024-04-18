@@ -72,6 +72,10 @@ public class Avatar {
         this.experience += experience;
     }
 
+    public void subExperience(Integer experience) {
+        this.experience = experience;
+    }
+
     public void updateGrade(Grade grade) {
         this.grade = grade;
         this.characterImage = grade.getAvatarImage();
