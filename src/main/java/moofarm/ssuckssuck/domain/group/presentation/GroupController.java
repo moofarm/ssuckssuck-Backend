@@ -32,7 +32,7 @@ public class GroupController {
     }
 
     @Operation(summary = "미션방 키워드 검색")
-    @GetMapping("/search/{pageNumber}/{keyword}")
+    @GetMapping("/search/{keyword}/{pageNumber}")
     public Slice<GroupResponse> getGroupsByKeyword(@PathVariable(value = "pageNumber") int pageNumber, @PathVariable(value = "keyword") String keyword) {
         return groupService.getGroupsByKeyword(pageNumber,keyword);
     }
