@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "유저", description = "유저 관련 API")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @Operation(summary = "닉네임 중복 확인")
-    @GetMapping("/nick/{nickname}")
+    @GetMapping("/nickname/{nickname}")
     public NicknameDuplicationResponse nicknameDuplication(@PathVariable String nickname) {
         return userService.isNicknameDuplicate(nickname);
     }
