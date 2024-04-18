@@ -12,9 +12,12 @@ import moofarm.ssuckssuck.domain.certification.domain.exception.UserNotOwnerExce
 import moofarm.ssuckssuck.domain.certification.domain.vo.CertificationinfoVO;
 import moofarm.ssuckssuck.domain.group.domain.Group;
 import moofarm.ssuckssuck.domain.misson.domain.Mission;
-import moofarm.ssuckssuck.domain.misson.exception.UserIsNotMissionHostException;
+import moofarm.ssuckssuck.domain.report.domain.Report;
 import moofarm.ssuckssuck.domain.user.domain.User;
 import moofarm.ssuckssuck.global.database.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +39,9 @@ public class Certification extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     private Mission mission;
+
+    @OneToMany(mappedBy = "certification", cascade = CascadeType.ALL)
+    private List<Report> reportList = new ArrayList<>();
 
     private String certificationImage;
 
