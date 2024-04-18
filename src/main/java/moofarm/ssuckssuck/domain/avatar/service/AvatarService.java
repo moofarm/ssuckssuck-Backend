@@ -44,10 +44,10 @@ public class AvatarService implements AvatarServiceUtils {
         Integer point = calculateExpPointsToAdd(count);
 
         avatar.addExperience(count);
-
         updateGrade(avatar);
+        calculateExperienceNeededForNextGrade(avatar);
 
-        return calculateExperienceNeededForNextGrade(user, avatar);
+        return new AddExperienceResponse(user.getUserInfo());
     }
 
     /**
@@ -60,7 +60,8 @@ public class AvatarService implements AvatarServiceUtils {
     }
 
     // 다음 등급까지 필요한 경험치 계산
-    private AddExperienceResponse calculateExperienceNeededForNextGrade(User user, Avatar avatar) {
+    @Override
+    public void calculateExperienceNeededForNextGrade(Avatar avatar) {
         Grade currentGrade = avatar.getGrade();
         Integer currentExperience = avatar.getExperience();
         Grade[] grades = Grade.values();
@@ -72,14 +73,13 @@ public class AvatarService implements AvatarServiceUtils {
         int expDiffCurrGrade = currentExperience - currentGrade.getRequiredExperience();
 
         avatar.updateGradeExpInfo(expToNextGrade, expDiffCurrGrade);
-
-        return new AddExperienceResponse(user.getUserInfo());
     }
 
 
 
     // 등급 변경
-    private void updateGrade(Avatar avatar) {
+    @Override
+    public void updateGrade(Avatar avatar) {
         Integer experience = avatar.getExperience();
         Grade currentGrade = avatar.getGrade();
         Grade newGrade = Grade.findByExperience(experience);
