@@ -47,6 +47,7 @@ public class UserController {
         userService.userWithdraw();
     }
 
+    @SecurityRequirements
     @Operation(summary = "닉네임 중복 확인")
     @GetMapping("/nick/{nickname}")
     public NicknameDuplicationResponse nicknameDuplication(@PathVariable String nickname) {
