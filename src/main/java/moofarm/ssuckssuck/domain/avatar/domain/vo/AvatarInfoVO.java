@@ -11,6 +11,7 @@ public record AvatarInfoVO(
         String characterImage,
         Integer expToNextGrade,
         Integer expDiffCurrGrade,
+        Integer radishCount,
         Grade grade
 ) {
 }
