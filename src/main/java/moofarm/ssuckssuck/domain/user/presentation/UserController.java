@@ -30,13 +30,13 @@ public class UserController {
     }
 
     @Operation(summary = "회원 정보 조회")
-    @GetMapping("/")
+    @GetMapping()
     public UserProfileResponse getUserProfile() {
         return userService.getUserProfile();
     }
 
     @Operation(summary = "관심사 수정")
-    @PatchMapping("/")
+    @PatchMapping()
     public UserProfileResponse updateCategory(@RequestBody @Valid UpdateCategoryRequest updateCategoryRequest) {
         return userService.updateCategory(updateCategoryRequest);
     }

@@ -31,18 +31,20 @@ public class Avatar {
     private String characterImage;
     private Integer expToNextGrade;
     private Integer expDiffCurrGrade;
+    private Integer radishCount;
 
     @Enumerated(STRING)
     private Grade grade;
 
     @Builder
-    public Avatar(Integer experience, LocalDate birthday, String characterImage, Grade grade, Integer expToNextGrade, Integer expDiffCurrGrade) {
+    public Avatar(Integer experience, LocalDate birthday, String characterImage, Grade grade, Integer expToNextGrade, Integer expDiffCurrGrade, Integer radishCount) {
         this.experience = experience;
         this.birthday = birthday;
         this.characterImage = characterImage;
         this.grade = grade;
         this.expToNextGrade = expToNextGrade;
         this.expDiffCurrGrade = expDiffCurrGrade;
+        this.radishCount = radishCount;
     }
 
     public static Avatar createAvatar() {
@@ -52,6 +54,7 @@ public class Avatar {
                 .characterImage(SEED.getAvatarImage())
                 .expToNextGrade(SPROUT.getRequiredExperience())
                 .expDiffCurrGrade(0)
+                .radishCount(0)
                 .grade(Grade.SEED)
                 .build();
     }
@@ -64,8 +67,13 @@ public class Avatar {
                 characterImage,
                 expToNextGrade,
                 expDiffCurrGrade,
+                radishCount,
                 grade
         );
+    }
+
+    public void addRadishCount() {
+        this.radishCount++;
     }
 
     public void addExperience(Integer experience) {
