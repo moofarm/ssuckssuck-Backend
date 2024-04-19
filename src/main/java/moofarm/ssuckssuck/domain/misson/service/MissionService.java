@@ -2,6 +2,7 @@ package moofarm.ssuckssuck.domain.misson.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
 import moofarm.ssuckssuck.domain.group.domain.Group;
 import moofarm.ssuckssuck.domain.group.service.GroupServiceUtils;
 import moofarm.ssuckssuck.domain.misson.domain.Mission;
@@ -110,6 +111,7 @@ public class MissionService implements MissionServiceUtils{
                     deleteMissionAsync(mission);
                     continue;
                 } else {
+                    addBonusExp(mission);
                     mission.resetMissionFrequency();
                 }
             }
@@ -135,6 +137,13 @@ public class MissionService implements MissionServiceUtils{
         Mission mission = queryMission(missionId);
         mission.validUserIsHost(user);
         return mission;
+    }
+
+    // 목표 인증 횟수 달성 시 보너스 경험치
+    private void addBonusExp( Mission mission) {
+        Avatar avatar = mission.getUser().getAvatar();
+
+        avatar.addExperience(mission.getTargetCount().getMinNum());
     }
 
     @Async
