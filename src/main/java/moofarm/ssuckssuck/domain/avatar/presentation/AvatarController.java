@@ -23,7 +23,7 @@ public class AvatarController {
 
     @Operation(summary = "경험치 증가")
     @PostMapping("/up")
-    public AddExperienceResponse signUp(@RequestBody @Valid AddExperienceRequest addExperienceRequest) {
-        return avatarService.addExperience(addExperienceRequest.count());
+    public AddExperienceResponse signUp() {
+        return avatarService.addExperience();
     }
 }
