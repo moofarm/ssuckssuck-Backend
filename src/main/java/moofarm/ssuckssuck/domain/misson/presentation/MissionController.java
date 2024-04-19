@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.request.CreateMissionRequest;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MissionProfileResponse;
+import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MyMissionListResponse;
 import moofarm.ssuckssuck.domain.misson.service.MissionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class MissionController {
     @GetMapping("/mission/{missionId}")
     public MissionProfileResponse getMissionProfile(@PathVariable("missionId") Long missionId) {
         return missionService.getMissionProfile(missionId);
+    }
+
+    @Operation(summary = "나의 미션 리스트 조회")
+    @GetMapping("/mission/list")
+    public MyMissionListResponse getMissionProfile() {
+        return missionService.getMyMissionList();
     }
 
     @Operation(summary = "미션 삭제")

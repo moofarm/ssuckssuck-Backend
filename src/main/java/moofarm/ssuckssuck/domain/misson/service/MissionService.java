@@ -9,6 +9,7 @@ import moofarm.ssuckssuck.domain.misson.domain.repository.MissionRepository;
 import moofarm.ssuckssuck.domain.misson.exception.MissionNotFoundException;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.request.CreateMissionRequest;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MissionProfileResponse;
+import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MyMissionListResponse;
 import moofarm.ssuckssuck.domain.user.domain.User;
 import moofarm.ssuckssuck.global.utils.user.UserUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,15 +50,29 @@ public class MissionService implements MissionServiceUtils{
 
         group.addParticipant();
 
-        return new MissionProfileResponse(mission.getMissionInfoVO());
+        return new MissionProfileResponse(groupId, mission.getMissionInfoVO());
     }
 
     // 미션 정보 조회
     public MissionProfileResponse getMissionProfile(Long id) {
         Mission mission = getMission(id);
 
-        return new MissionProfileResponse(mission.getMissionInfoVO());
+        return new MissionProfileResponse(mission.getGroup().getId(), mission.getMissionInfoVO());
     }
+
+    // 나의 미션 리스트 조회
+    public MyMissionListResponse getMyMissionList() {
+        User user = userUtils.getUserFromSecurityContext();
+        List<Mission> bookmarkList = missionRepository.findAllByUserAndBookmark(user, true);
+        List<Mission> unbookmarkList = missionRepository.findAllByUserAndBookmark(user, false);
+
+
+        List<MissionProfileResponse> bookmarkedList = bookmarkList.stream().map(l -> new MissionProfileResponse(l.getGroup().getId(), l.getMissionInfoVO())).collect(Collectors.toList());
+        List<MissionProfileResponse> unbookmarkedList = unbookmarkList.stream().map(l -> new MissionProfileResponse(l.getGroup().getId(), l.getMissionInfoVO())).collect(Collectors.toList());
+
+        return new MyMissionListResponse(bookmarkedList, unbookmarkedList);
+    }
+
 
     // 미션 탈퇴
     @Transactional
@@ -109,7 +127,7 @@ public class MissionService implements MissionServiceUtils{
 
         mission.bookmarkMission();
 
-        return new MissionProfileResponse(mission.getMissionInfoVO());
+        return new MissionProfileResponse(mission.getGroup().getId(), mission.getMissionInfoVO());
     }
 
     private Mission getMission(Long missionId) {
