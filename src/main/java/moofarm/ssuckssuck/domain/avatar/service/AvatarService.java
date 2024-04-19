@@ -37,26 +37,16 @@ public class AvatarService implements AvatarServiceUtils {
 
     // 경험치 증가 및 등급 업데이트 분리
     @Transactional
-    public AddExperienceResponse addExperience(Integer count) {
+    public AddExperienceResponse addExperience() {
         User user = userUtils.getUserFromSecurityContext();
         Avatar avatar = user.getAvatar();
 
-        Integer point = calculateExpPointsToAdd(count);
+        avatar.addExperience(5);
 
-        avatar.addExperience(count);
         updateGrade(avatar);
         calculateExperienceNeededForNextGrade(avatar);
 
         return new AddExperienceResponse(user.getUserInfo());
-    }
-
-    /**
-     *
-     * Todo : 경험치 계산 로직 구현
-     */
-    // 경험치 계산
-    private Integer calculateExpPointsToAdd(Integer count) {
-        return 0;
     }
 
     // 다음 등급까지 필요한 경험치 계산
@@ -75,8 +65,6 @@ public class AvatarService implements AvatarServiceUtils {
         avatar.updateGradeExpInfo(expToNextGrade, expDiffCurrGrade);
     }
 
-
-
     // 등급 변경
     @Override
     public void updateGrade(Avatar avatar) {
@@ -85,6 +73,7 @@ public class AvatarService implements AvatarServiceUtils {
         Grade newGrade = Grade.findByExperience(experience);
 
         if (newGrade == RADISH) {
+            avatar.addRadishCount();
             avatar.resetRadishInfo();
         } else if (newGrade != currentGrade) {
             avatar.updateGrade(newGrade);
