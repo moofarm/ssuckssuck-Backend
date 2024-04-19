@@ -7,6 +7,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public record MissionProfileResponse(
+        Long groupId,
         Long missionId,
         LocalDate dueDate,
         boolean bookmark,
@@ -15,8 +16,8 @@ public record MissionProfileResponse(
         TargetCount targetCount,
         DayOfWeek dayOfWeek
 ) {
-    public MissionProfileResponse(MissionInfoVO missionInfoVO) {
-        this(missionInfoVO.id(), missionInfoVO.dueDate(), missionInfoVO.bookmark(), missionInfoVO.missionFrequency(),
+    public MissionProfileResponse(Long groupId, MissionInfoVO missionInfoVO) {
+        this(groupId, missionInfoVO.id(), missionInfoVO.dueDate(), missionInfoVO.bookmark(), missionInfoVO.missionFrequency(),
                 missionInfoVO.missionStatus(), missionInfoVO.targetCount(), missionInfoVO.dayOfWeek());
     }
 }
