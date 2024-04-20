@@ -27,6 +27,10 @@ public enum ErrorCode{
     GROUP_NOT_FOUND(404, "해당하는 정보의 미션방을 찾을 수 없습니다."),
     CERTIFICATION_NOT_FOUND(404, "해당하는 미션 인증 이미지를 찾을 수 없습니다."),
     REPORT_NOT_FOUND(404, "해당하는 정보의 신고를 찾을 수 없습니다."),
+    BAD_FILE_EXTENSION(404,  "파일 확장자 오류입니다."),
+    IMAGE_SIZE_EXTENSION(404,  "파일 크기 오류입니다."),
+    FILE_EMPTY(404,  "해당 파일이 비어 있습니다."),
+    FILE_UPLOAD_FAIL(404,  "파일 업로드에 실패하였습니다."),
 
     /* 409 Conflict : 사용자의 요청이 서버의 상태와 충돌 */
     NICKNAME_DUPLICATION(409, "닉네임이 중복됩니다."),
