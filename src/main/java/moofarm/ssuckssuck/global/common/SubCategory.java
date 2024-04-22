@@ -37,7 +37,10 @@ public enum SubCategory {
     // 경제
     SAVING_MONEY("절약", ECONOMY),
     INVEST("투자", ECONOMY),
-    ECONOMY_ECT("경제 - 기타", ECONOMY);
+    ECONOMY_ECT("경제 - 기타", ECONOMY),
+
+    // 기타
+    ETC("기타", MainCategory.ETC);
 
     private final String message;
     private final MainCategory mainCategory;
