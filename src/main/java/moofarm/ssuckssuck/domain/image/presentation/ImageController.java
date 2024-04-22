@@ -18,7 +18,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @Operation(summary = "이미지 업로드")
-    @PostMapping("/image")
+    @PostMapping("/api/image")
     public UploadImageResponse upload(@RequestParam("file") MultipartFile file) {
         return imageService.uploadImage(file);
     }
