@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface MissionRepository extends JpaRepository<Mission, Long> {
     Optional<Mission> findByGroup(Group group);
+    boolean existsByUserAndGroup(User user, Group group);
     List<Mission> findAllByUserAndBookmark(User user, boolean bookmark);
 }
