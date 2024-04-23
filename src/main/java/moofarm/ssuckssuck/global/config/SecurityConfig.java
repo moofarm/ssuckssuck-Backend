@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/user/login").permitAll()
                         .requestMatchers("/api/user/signup").permitAll()
+                        .requestMatchers("/api/user/nickname/{nickname}").permitAll()
                         .requestMatchers("/api/nick/{nickname}").permitAll()
                         .requestMatchers("/api/up").permitAll()
                         .requestMatchers(SwaggerPatterns).permitAll()
