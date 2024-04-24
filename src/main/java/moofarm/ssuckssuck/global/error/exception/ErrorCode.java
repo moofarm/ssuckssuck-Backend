@@ -25,6 +25,7 @@ public enum ErrorCode{
     USER_NOT_FOUND(404, "해당하는 정보의 사용자를 찾을 수 없습니다."),
     MISSION_NOT_FOUND(404, "해당하는 정보의 미션을 찾을 수 없습니다."),
     GROUP_NOT_FOUND(404, "해당하는 정보의 미션방을 찾을 수 없습니다."),
+    DUPLICATION_PARTICIPATION_GROUP(404, "해당하는 그룹에 중복 참여입니다."),
     CERTIFICATION_NOT_FOUND(404, "해당하는 미션 인증 이미지를 찾을 수 없습니다."),
     REPORT_NOT_FOUND(404, "해당하는 정보의 신고를 찾을 수 없습니다."),
     BAD_FILE_EXTENSION(404,  "파일 확장자 오류입니다."),

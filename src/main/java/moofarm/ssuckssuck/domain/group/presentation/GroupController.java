@@ -26,6 +26,12 @@ public class GroupController {
         return groupService.createGroup(createGroupRequest);
     }
 
+    @Operation(summary = "그룹 정보 조회")
+    @GetMapping("/{groupId}")
+    public GroupResponse getGroupsBySubCategory(@PathVariable(value = "groupId") Long groupId) {
+        return groupService.getGroupProfile(groupId);
+    }
+
     @Operation(summary = "미션방 하위 카테고리 정보 조회")
     @GetMapping("/search/subCategory/{subCategory}/{pageNumber}")
     public Slice<SearchGroupResponse> getGroupsBySubCategory(@PathVariable(value = "subCategory") SubCategory subCategory, @PathVariable(value = "pageNumber") int pageNumber, @RequestParam(name = "sortBy", defaultValue = "createDate") String sortBy) {
