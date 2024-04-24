@@ -36,17 +36,13 @@ public class AvatarService implements AvatarServiceUtils {
     }
 
     // 경험치 증가 및 등급 업데이트 분리
+    @Override
     @Transactional
-    public AddExperienceResponse addExperience() {
-        User user = userUtils.getUserFromSecurityContext();
-        Avatar avatar = user.getAvatar();
-
+    public void addExperience(Avatar avatar) {
         avatar.addExperience(5);
 
         updateGrade(avatar);
         calculateExperienceNeededForNextGrade(avatar);
-
-        return new AddExperienceResponse(user.getUserInfo());
     }
 
     // 다음 등급까지 필요한 경험치 계산
