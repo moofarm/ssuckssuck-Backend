@@ -3,10 +3,12 @@ package moofarm.ssuckssuck.domain.misson.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
+import moofarm.ssuckssuck.domain.avatar.service.AvatarServiceUtils;
 import moofarm.ssuckssuck.domain.group.domain.Group;
 import moofarm.ssuckssuck.domain.group.service.GroupServiceUtils;
 import moofarm.ssuckssuck.domain.misson.domain.Mission;
 import moofarm.ssuckssuck.domain.misson.domain.repository.MissionRepository;
+import moofarm.ssuckssuck.domain.misson.exception.DuplicateParticipationException;
 import moofarm.ssuckssuck.domain.misson.exception.MissionNotFoundException;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.request.CreateMissionRequest;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MissionProfileResponse;
@@ -19,9 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,12 +33,17 @@ public class MissionService implements MissionServiceUtils{
     private final MissionRepository missionRepository;
     private final UserUtils userUtils;
     private final GroupServiceUtils groupServiceUtils;
+    private final AvatarServiceUtils avatarServiceUtils;
 
     // 미션방 생성하기
     @Transactional
     public MissionProfileResponse createMission(Long groupId, CreateMissionRequest createMissionRequest) {
         User user = userUtils.getUserFromSecurityContext();
         Group group = groupServiceUtils.queryGroup(groupId);
+
+        if (missionRepository.existsByUserAndGroup(user, group)) {
+            throw DuplicateParticipationException.EXCEPTION;
+        }
 
         Mission mission = Mission.createMission(
                 user,
@@ -55,17 +60,18 @@ public class MissionService implements MissionServiceUtils{
     }
 
     // 미션 정보 조회
-    public MissionProfileResponse getMissionProfile(Long id) {
-        Mission mission = getMission(id);
+    public MissionProfileResponse getMissionProfile(Long missionId) {
+        Mission mission = getMission(missionId);
 
         return new MissionProfileResponse(mission.getGroup().getId(), mission.getMissionInfoVO());
     }
 
+
     // 나의 미션 리스트 조회
     public MyMissionListResponse getMyMissionList() {
         User user = userUtils.getUserFromSecurityContext();
-        List<Mission> bookmarkList = missionRepository.findAllByUserAndBookmark(user, true);
-        List<Mission> unbookmarkList = missionRepository.findAllByUserAndBookmark(user, false);
+        List<Mission> bookmarkList = missionRepository.findAllByUserAndBookmarkOrderByCreateDateDesc(user, true);
+        List<Mission> unbookmarkList = missionRepository.findAllByUserAndBookmarkOrderByCreateDateDesc(user, false);
 
 
         List<MissionProfileResponse> bookmarkedList = bookmarkList.stream().map(l -> new MissionProfileResponse(l.getGroup().getId(), l.getMissionInfoVO())).collect(Collectors.toList());
@@ -74,8 +80,7 @@ public class MissionService implements MissionServiceUtils{
         return new MyMissionListResponse(bookmarkedList, unbookmarkedList);
     }
 
-
-    // 미션 탈퇴
+    // 미션 탈퇴 - 삭제
     @Transactional
     public void deleteMission(Long groupId) {
         User user = userUtils.getUserFromSecurityContext();
@@ -104,6 +109,7 @@ public class MissionService implements MissionServiceUtils{
             if (mission.isMissionStatus()) {
                 mission.addMissionFrequency();
                 mission.resetMissionStatus();
+                addExperience(mission);
             }
 
             if (mission.getDayOfWeek() == LocalDate.now().getDayOfWeek()) {
@@ -149,6 +155,19 @@ public class MissionService implements MissionServiceUtils{
     @Async
     public void deleteMissionAsync(Mission mission) {
         missionRepository.delete(mission);
+
+        Group group = mission.getGroup();
+
+        group.subtractParticipant();
+
+        if (group.getParticipantsCount() == 0) {
+            groupServiceUtils.deleteGroup(group.getId());
+        }
+    }
+
+    private void addExperience(Mission mission) {
+        Avatar avatar = mission.getUser().getAvatar();
+        avatarServiceUtils.addExperience(avatar);
     }
 
     @Override
