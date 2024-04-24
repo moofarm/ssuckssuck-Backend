@@ -42,6 +42,13 @@ public class GroupService implements GroupServiceUtils{
         return new GroupResponse(group.getGroupInfo());
     }
 
+    // 그룹 정보 조회
+    public GroupResponse getGroupProfile(Long groupId) {
+        Group group = queryGroup(groupId);
+
+        return new GroupResponse(group.getGroupInfo());
+    }
+
     //하위 카테고리 정보 조회
     public Slice<SearchGroupResponse> getGroupsBySubCategory(SubCategory subCategory, int pageNumber, String sortBy) {
         Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, sortBy));
