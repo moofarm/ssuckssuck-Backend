@@ -21,9 +21,9 @@ public class AvatarController {
 
     private final AvatarService avatarService;
 
-    @Operation(summary = "경험치 증가")
-    @PostMapping("/up")
-    public AddExperienceResponse signUp() {
-        return avatarService.addExperience();
-    }
+//    @Operation(summary = "경험치 증가")
+//    @PostMapping("/up")
+//    public void signUp() {
+//        avatarService.addExperience();
+//    }
 }
