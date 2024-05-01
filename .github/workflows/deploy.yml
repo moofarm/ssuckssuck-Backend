@@ -1,0 +1,39 @@
+name: Deploy to EC2 with Docker Compose
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "~/ssuckssuckssuck"
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/ssuckssuckssuck
+            {
+              echo "Creating .env file with secrets"
+              for var in AWS_ACCESS_KEY AWS_SECRET_KEY AWS_S3_BASE_URL AWS_S3_BUCKET DB_NAME GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REDIRECT_ID JWT_ACCESS_EXP JWT_HEADER JWT_PREFIX JWT_REFRESH_EXP JWT_SECRET_KEY KAKAO_CLIENT_ID KAKAO_CLIENT_SECRET KAKAO_REDIRECT_URI MAIL_HOST MAIL_PASSWORD MAIL_PORT MAIL_USERNAME MYSQL_HOST MYSQL_PASSWORD MYSQL_PORT MYSQL_USERNAME NAVER_CLIENT_ID NAVER_CLIENT_SECRET NAVER_REDIRECT_URI NAVER_STATE SWAGGER_PATH REDIS_HOST REDIS_PORT MYSQL_ROOT_PASSWORD MYSQL_DATABASE MYSQL_USER; do
+                echo "$var=${{ secrets[$var] }}" >> .env
+              done
+              docker-compose up --force-recreate 
+            } && echo "Deployment successful." || echo "Deployment failed."
+            echo "Removing .env file for security reasons"
+            rm .env

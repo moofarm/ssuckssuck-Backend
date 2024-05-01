@@ -1,0 +1,60 @@
+version: '3.8'
+services:
+  app:
+    image: nana0712/ssuckssuckssuck
+    ports:
+      - "8080:8080"
+    environment:
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      AWS_S3_BASE_URL: ${AWS_S3_BASE_URL}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+      DB_NAME: ${MYSQL_DATABASE}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_ID: ${GOOGLE_REDIRECT_ID}
+      JWT_ACCESS_EXP: ${JWT_ACCESS_EXP}
+      JWT_HEADER: ${JWT_HEADER}
+      JWT_PREFIX: ${JWT_PREFIX}
+      JWT_REFRESH_EXP: ${JWT_REFRESH_EXP}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MYSQL_HOST: "db"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USERNAME: ${MYSQL_USERNAME}
+      NAVER_CLIENT_ID: ${NAVER_CLIENT_ID}
+      NAVER_CLIENT_SECRET: ${NAVER_CLIENT_SECRET}
+      NAVER_REDIRECT_URI: ${NAVER_REDIRECT_URI}
+      NAVER_STATE: ${NAVER_STATE}
+      SWAGGER_PATH: ${SWAGGER_PATH}
+      REDIS_HOST: "redis"
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - db
+      - redis
+  db:
+    image: mysql:8.0
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
