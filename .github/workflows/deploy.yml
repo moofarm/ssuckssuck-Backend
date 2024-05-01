@@ -28,12 +28,41 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/ssuckssuckssuck
-            {
-              echo "Creating .env file with secrets"
-              for var in AWS_ACCESS_KEY AWS_SECRET_KEY AWS_S3_BASE_URL AWS_S3_BUCKET DB_NAME GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REDIRECT_ID JWT_ACCESS_EXP JWT_HEADER JWT_PREFIX JWT_REFRESH_EXP JWT_SECRET_KEY KAKAO_CLIENT_ID KAKAO_CLIENT_SECRET KAKAO_REDIRECT_URI MAIL_HOST MAIL_PASSWORD MAIL_PORT MAIL_USERNAME MYSQL_HOST MYSQL_PASSWORD MYSQL_PORT MYSQL_USERNAME NAVER_CLIENT_ID NAVER_CLIENT_SECRET NAVER_REDIRECT_URI NAVER_STATE SWAGGER_PATH REDIS_HOST REDIS_PORT MYSQL_ROOT_PASSWORD MYSQL_DATABASE MYSQL_USER; do
-                echo "$var=${{ secrets[$var] }}" >> .env
-              done
-              docker-compose up --force-recreate 
-            } && echo "Deployment successful." || echo "Deployment failed."
+            echo "Creating .env file with secrets"
+            echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" > .env
+            echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+            echo "AWS_S3_BASE_URL=${{ secrets.AWS_S3_BASE_URL }}" >> .env
+            echo "AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}" >> .env
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+            echo "GOOGLE_REDIRECT_ID=${{ secrets.GOOGLE_REDIRECT_ID }}" >> .env
+            echo "JWT_ACCESS_EXP=${{ secrets.JWT_ACCESS_EXP }}" >> .env
+            echo "JWT_HEADER=${{ secrets.JWT_HEADER }}" >> .env
+            echo "JWT_PREFIX=${{ secrets.JWT_PREFIX }}" >> .env
+            echo "JWT_REFRESH_EXP=${{ secrets.JWT_REFRESH_EXP }}" >> .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+            echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
+            echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+            echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
+            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
+            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+            echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+            echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+            echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env
+            echo "MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}" >> .env
+            echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
+            echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env
+            echo "NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }}" >> .env
+            echo "NAVER_STATE=${{ secrets.NAVER_STATE }}" >> .env
+            echo "SWAGGER_PATH=${{ secrets.SWAGGER_PATH }}" >> .env
+            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+            echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+            echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+            echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+            docker-compose up -d --force-recreate
             echo "Removing .env file for security reasons"
             rm .env
