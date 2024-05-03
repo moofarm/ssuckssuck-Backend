@@ -91,6 +91,7 @@ jobs:
             echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
             echo "Creating .env file with secrets"
             #cat .env
+            docker-compose pull
             docker-compose up -d --force-recreate
             docker-compose config
            # echo "Removing .env file for security reasons"
