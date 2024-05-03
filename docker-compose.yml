@@ -1,6 +1,6 @@
 services:
   app:
-    image: nana0712/ssuckssuckssuck
+    image: nana0712/ssuckssuckssuck:latest
     ports:
       - "8080:8080"
     environment:
