@@ -94,5 +94,5 @@ jobs:
             docker-compose pull
             docker-compose up -d --force-recreate
             docker-compose config
-            echo "Removing .env file for security reasons"
-            rm .env
+            #echo "Removing .env file for security reasons"
+            #rm .env
