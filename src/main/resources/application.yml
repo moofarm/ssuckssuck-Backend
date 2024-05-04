@@ -18,7 +18,7 @@ spring:
       force: true
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: ture
