@@ -1,4 +1,4 @@
-version: '3.7'  # 리소스 제한 설정을 사용하기 위해 Compose 파일 버전 3.7 이상 사용
+version: '3.7'
 services:
   app:
     image: nana0712/ssuckssuckssuck
@@ -39,13 +39,6 @@ services:
     depends_on:
       - db
       - redis
-    resources:
-      limits:
-        cpus: '1.0'
-        memory: 512M
-      reservations:
-        cpus: '0.5'
-        memory: 256M
 
   db:
     image: mysql:8.0
@@ -62,19 +55,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    resources:
-      limits:
-        cpus: '0.5'
-        memory: 1G
 
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
-    resources:
-      limits:
-        cpus: '0.25'
-        memory: 256M
 
 volumes:
   mysql_data:
