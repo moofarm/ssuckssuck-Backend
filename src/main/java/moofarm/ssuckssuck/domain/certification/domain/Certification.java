@@ -72,9 +72,10 @@ public class Certification extends BaseEntity {
                 .likeCount(0)
                 .build();
     }
-    public void addLikeCount() {
+    public void increaseLikeCount() {
         this.likeCount++;
     }
+    public void decreaseLikeCount() { this.likeCount--; }
 
     public void verifyOwner(User user) {
         if (!this.user.equals(user)) {
