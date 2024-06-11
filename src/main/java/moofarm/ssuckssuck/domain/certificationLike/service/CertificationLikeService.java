@@ -25,33 +25,27 @@ public class CertificationLikeService {
     private final UserUtils userUtils;
 
 
-    // 미션 인증 좋아요
+    // 미션 인증 좋아요 상태 변경
     @Transactional
     public CertificationLikeResponse createCertificationLike(Long certificationId, CreateCertificationLikeRequest createCertificationLikeRequest) {
         User user = userUtils.getUserFromSecurityContext();
         Certification certification = certificationServiceUtils.queryCertification(certificationId);
 
-        CertificationLike certificationLike = CertificationLike.createCertificationLike(
-                certification,
-                user
-        );
-        certificationLikeRepository.save(certificationLike);
-        certification.increaseLikeCount();
-
-        return new CertificationLikeResponse(certificationLike.getCertificationLikeInfoVO());
-    }
-
-    // 미션 인증 좋아요 취소
-    @Transactional
-    public void deleteCertificationLike(Long certificationId) {
-        User user = userUtils.getUserFromSecurityContext();
-        Certification certification = certificationServiceUtils.queryCertification(certificationId);
-
         CertificationLike certificationLike = certificationLikeRepository.findByCertificationAndUser(certification, user)
-                .orElseThrow(() -> CertificationLikeNotFoundException.EXCEPTION);
+                .orElse(null);
 
-        certificationLikeRepository.delete(certificationLike);
-        certification.decreaseLikeCount();
+        if (certificationLike != null) {
+            certificationLike.updateLikeStatus(createCertificationLikeRequest.likeStatus());
+        } else {
+            certificationLike = CertificationLike.createCertificationLike(certification, user);
+            certificationLikeRepository.save(certificationLike);
+        }
+        if (createCertificationLikeRequest.likeStatus()) {
+            certification.increaseLikeCount();
+        } else {
+            certification.decreaseLikeCount();
+        }
+        return new CertificationLikeResponse(certificationLike.getCertificationLikeInfoVO());
 
     }
 
