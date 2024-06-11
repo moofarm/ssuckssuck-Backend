@@ -6,7 +6,6 @@ import moofarm.ssuckssuck.domain.certification.domain.Certification;
 import moofarm.ssuckssuck.domain.certification.service.CertificationServiceUtils;
 import moofarm.ssuckssuck.domain.certificationLike.domain.CertificationLike;
 import moofarm.ssuckssuck.domain.certificationLike.domain.repository.CertificationLikeRepository;
-import moofarm.ssuckssuck.domain.certificationLike.exception.CertificationLikeNotFoundException;
 import moofarm.ssuckssuck.domain.certificationLike.presentation.dto.request.CreateCertificationLikeRequest;
 import moofarm.ssuckssuck.domain.certificationLike.presentation.dto.response.CertificationLikeResponse;
 import moofarm.ssuckssuck.domain.user.domain.User;
@@ -23,7 +22,6 @@ public class CertificationLikeService {
     private final CertificationLikeRepository certificationLikeRepository;
     private final CertificationServiceUtils certificationServiceUtils;
     private final UserUtils userUtils;
-
 
     // 미션 인증 좋아요 상태 변경
     @Transactional
