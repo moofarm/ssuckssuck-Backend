@@ -9,6 +9,7 @@ import moofarm.ssuckssuck.domain.group.domain.Group;
 import moofarm.ssuckssuck.domain.misson.domain.vo.MissionInfoVO;
 import moofarm.ssuckssuck.domain.misson.exception.UserIsNotMissionHostException;
 import moofarm.ssuckssuck.domain.user.domain.User;
+import moofarm.ssuckssuck.global.database.BaseEntity;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Mission {
+public class Mission extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -69,7 +70,7 @@ public class Mission {
                 .missionFrequency(0)
                 .missionStatus(false)
                 .targetCount(targetCount)
-                .dayOfWeek(LocalDate.now().plusDays(1).getDayOfWeek())
+                .dayOfWeek(LocalDate.now().getDayOfWeek())
                 .build();
     }
 

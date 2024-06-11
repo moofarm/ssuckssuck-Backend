@@ -36,31 +36,18 @@ public class AvatarService implements AvatarServiceUtils {
     }
 
     // 경험치 증가 및 등급 업데이트 분리
+    @Override
     @Transactional
-    public AddExperienceResponse addExperience(Integer count) {
-        User user = userUtils.getUserFromSecurityContext();
-        Avatar avatar = user.getAvatar();
-
-        Integer point = calculateExpPointsToAdd(count);
-
-        avatar.addExperience(count);
+    public void addExperience(Avatar avatar) {
+        avatar.addExperience(5);
 
         updateGrade(avatar);
-
-        return calculateExperienceNeededForNextGrade(user, avatar);
-    }
-
-    /**
-     *
-     * Todo : 경험치 계산 로직 구현
-     */
-    // 경험치 계산
-    private Integer calculateExpPointsToAdd(Integer count) {
-        return 0;
+        calculateExperienceNeededForNextGrade(avatar);
     }
 
     // 다음 등급까지 필요한 경험치 계산
-    private AddExperienceResponse calculateExperienceNeededForNextGrade(User user, Avatar avatar) {
+    @Override
+    public void calculateExperienceNeededForNextGrade(Avatar avatar) {
         Grade currentGrade = avatar.getGrade();
         Integer currentExperience = avatar.getExperience();
         Grade[] grades = Grade.values();
@@ -72,19 +59,17 @@ public class AvatarService implements AvatarServiceUtils {
         int expDiffCurrGrade = currentExperience - currentGrade.getRequiredExperience();
 
         avatar.updateGradeExpInfo(expToNextGrade, expDiffCurrGrade);
-
-        return new AddExperienceResponse(user.getUserInfo());
     }
 
-
-
     // 등급 변경
-    private void updateGrade(Avatar avatar) {
+    @Override
+    public void updateGrade(Avatar avatar) {
         Integer experience = avatar.getExperience();
         Grade currentGrade = avatar.getGrade();
         Grade newGrade = Grade.findByExperience(experience);
 
         if (newGrade == RADISH) {
+            avatar.addRadishCount();
             avatar.resetRadishInfo();
         } else if (newGrade != currentGrade) {
             avatar.updateGrade(newGrade);

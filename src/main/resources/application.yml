@@ -4,18 +4,38 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
   servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+      enabled: true
     encoding:
       charset: UTF-8
       force: true
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: ture
         dialect:
-
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          connectionpoolsize: 5
+          starttls:
+            enable: true
 auth:
   jwt:
     secretKey: ${JWT_SECRET_KEY}
@@ -62,3 +82,9 @@ springdoc:
     display-request-duration: true
   paths-to-match: /**
 
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+    base-url: ${AWS_S3_BASE_URL}

@@ -2,13 +2,17 @@ package moofarm.ssuckssuck.domain.misson.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
+import moofarm.ssuckssuck.domain.avatar.service.AvatarServiceUtils;
 import moofarm.ssuckssuck.domain.group.domain.Group;
 import moofarm.ssuckssuck.domain.group.service.GroupServiceUtils;
 import moofarm.ssuckssuck.domain.misson.domain.Mission;
 import moofarm.ssuckssuck.domain.misson.domain.repository.MissionRepository;
+import moofarm.ssuckssuck.domain.misson.exception.DuplicateParticipationException;
 import moofarm.ssuckssuck.domain.misson.exception.MissionNotFoundException;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.request.CreateMissionRequest;
 import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MissionProfileResponse;
+import moofarm.ssuckssuck.domain.misson.presentation.dto.response.MyMissionListResponse;
 import moofarm.ssuckssuck.domain.user.domain.User;
 import moofarm.ssuckssuck.global.utils.user.UserUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,12 +33,17 @@ public class MissionService implements MissionServiceUtils{
     private final MissionRepository missionRepository;
     private final UserUtils userUtils;
     private final GroupServiceUtils groupServiceUtils;
+    private final AvatarServiceUtils avatarServiceUtils;
 
     // 미션방 생성하기
     @Transactional
     public MissionProfileResponse createMission(Long groupId, CreateMissionRequest createMissionRequest) {
         User user = userUtils.getUserFromSecurityContext();
         Group group = groupServiceUtils.queryGroup(groupId);
+
+        if (missionRepository.existsByUserAndGroup(user, group)) {
+            throw DuplicateParticipationException.EXCEPTION;
+        }
 
         Mission mission = Mission.createMission(
                 user,
@@ -46,17 +56,31 @@ public class MissionService implements MissionServiceUtils{
 
         group.addParticipant();
 
-        return new MissionProfileResponse(mission.getMissionInfoVO());
+        return new MissionProfileResponse(groupId, mission.getMissionInfoVO());
     }
 
     // 미션 정보 조회
-    public MissionProfileResponse getMissionProfile(Long id) {
-        Mission mission = getMission(id);
+    public MissionProfileResponse getMissionProfile(Long missionId) {
+        Mission mission = getMission(missionId);
 
-        return new MissionProfileResponse(mission.getMissionInfoVO());
+        return new MissionProfileResponse(mission.getGroup().getId(), mission.getMissionInfoVO());
     }
 
-    // 미션 탈퇴
+
+    // 나의 미션 리스트 조회
+    public MyMissionListResponse getMyMissionList() {
+        User user = userUtils.getUserFromSecurityContext();
+        List<Mission> bookmarkList = missionRepository.findAllByUserAndBookmarkOrderByCreateDateDesc(user, true);
+        List<Mission> unbookmarkList = missionRepository.findAllByUserAndBookmarkOrderByCreateDateDesc(user, false);
+
+
+        List<MissionProfileResponse> bookmarkedList = bookmarkList.stream().map(l -> new MissionProfileResponse(l.getGroup().getId(), l.getMissionInfoVO())).collect(Collectors.toList());
+        List<MissionProfileResponse> unbookmarkedList = unbookmarkList.stream().map(l -> new MissionProfileResponse(l.getGroup().getId(), l.getMissionInfoVO())).collect(Collectors.toList());
+
+        return new MyMissionListResponse(bookmarkedList, unbookmarkedList);
+    }
+
+    // 미션 탈퇴 - 삭제
     @Transactional
     public void deleteMission(Long groupId) {
         User user = userUtils.getUserFromSecurityContext();
@@ -85,6 +109,7 @@ public class MissionService implements MissionServiceUtils{
             if (mission.isMissionStatus()) {
                 mission.addMissionFrequency();
                 mission.resetMissionStatus();
+                addExperience(mission);
             }
 
             if (mission.getDayOfWeek() == LocalDate.now().getDayOfWeek()) {
@@ -92,6 +117,7 @@ public class MissionService implements MissionServiceUtils{
                     deleteMissionAsync(mission);
                     continue;
                 } else {
+                    addBonusExp(mission);
                     mission.resetMissionFrequency();
                 }
             }
@@ -109,7 +135,7 @@ public class MissionService implements MissionServiceUtils{
 
         mission.bookmarkMission();
 
-        return new MissionProfileResponse(mission.getMissionInfoVO());
+        return new MissionProfileResponse(mission.getGroup().getId(), mission.getMissionInfoVO());
     }
 
     private Mission getMission(Long missionId) {
@@ -119,9 +145,29 @@ public class MissionService implements MissionServiceUtils{
         return mission;
     }
 
+    // 목표 인증 횟수 달성 시 보너스 경험치
+    private void addBonusExp( Mission mission) {
+        Avatar avatar = mission.getUser().getAvatar();
+
+        avatar.addExperience(mission.getTargetCount().getMinNum());
+    }
+
     @Async
     public void deleteMissionAsync(Mission mission) {
         missionRepository.delete(mission);
+
+        Group group = mission.getGroup();
+
+        group.subtractParticipant();
+
+        if (group.getParticipantsCount() == 0) {
+            groupServiceUtils.deleteGroup(group.getId());
+        }
+    }
+
+    private void addExperience(Mission mission) {
+        Avatar avatar = mission.getUser().getAvatar();
+        avatarServiceUtils.addExperience(avatar);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class OauthController {
 
     @SecurityRequirements
     @Operation(summary = "소셜 로그인")
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public OauthLoginResponse login(
             @RequestBody OauthLoginRequest oauthLoginRequest,
             HttpServletResponse response

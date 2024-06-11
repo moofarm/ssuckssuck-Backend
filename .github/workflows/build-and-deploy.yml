@@ -1,0 +1,109 @@
+name: Java CI with Gradle and Deploy to EC2
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean bootJar
+      - name: Remove old Docker image
+        run: docker rmi ${{ secrets.DOCKER_USERNAME }}/ssuckssuckssuck:latest || true
+      - name: Build Docker image
+        run: docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/ssuckssuckssuck:latest .
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/ssuckssuckssuck:latest
+
+  deploy:
+    needs: build-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "~/ssuckssuckssuck"
+      - name: Debug SSH Connection
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Testing SSH connection"
+            hostname
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e  # 스크립트 오류 발생 시 중단
+            cd ~/ssuckssuckssuck
+            echo "Creating .env file with secrets"
+            echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" > .env
+            echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+            echo "AWS_S3_BASE_URL=${{ secrets.AWS_S3_BASE_URL }}" >> .env
+            echo "AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}" >> .env
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+            echo "GOOGLE_REDIRECT_ID=${{ secrets.GOOGLE_REDIRECT_ID }}" >> .env
+            echo "JWT_ACCESS_EXP=${{ secrets.JWT_ACCESS_EXP }}" >> .env
+            echo "JWT_HEADER=${{ secrets.JWT_HEADER }}" >> .env
+            echo "JWT_PREFIX=${{ secrets.JWT_PREFIX }}" >> .env
+            echo "JWT_REFRESH_EXP=${{ secrets.JWT_REFRESH_EXP }}" >> .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+            echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
+            echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+            echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
+            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
+            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+            echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+            echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+            echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env
+            echo "MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}" >> .env
+            echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
+            echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env
+            echo "NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }}" >> .env
+            echo "NAVER_STATE=${{ secrets.NAVER_STATE }}" >> .env
+            echo "SWAGGER_PATH=${{ secrets.SWAGGER_PATH }}" >> .env
+            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+            echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+            echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+            echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+            echo "Starting Docker Compose"
+            docker-compose up -d --force-recreate
+            echo "Updating resource limits for app service"
+            docker update --cpus="1.0" --memory="512m" --memory-swap="1G" $(docker-compose ps -q app)
+            echo "Updating resource limits for db service"
+            docker update --cpus="0.5" --memory="1G" --memory-swap="2G" $(docker-compose ps -q db)
+            echo "Updating resource limits for redis service"
+            docker update --cpus="0.25" --memory="256m" --memory-swap="512m" $(docker-compose ps -q redis)

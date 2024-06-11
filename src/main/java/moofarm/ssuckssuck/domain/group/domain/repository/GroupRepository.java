@@ -1,6 +1,7 @@
 package moofarm.ssuckssuck.domain.group.domain.repository;
 
 import moofarm.ssuckssuck.domain.group.domain.Group;
+import moofarm.ssuckssuck.domain.user.domain.User;
 import moofarm.ssuckssuck.global.common.SubCategory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

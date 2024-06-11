@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import moofarm.ssuckssuck.domain.group.presentation.dto.request.CreateGroupRequest;
 import moofarm.ssuckssuck.domain.group.presentation.dto.response.GroupResponse;
+import moofarm.ssuckssuck.domain.group.presentation.dto.response.SearchGroupResponse;
 import moofarm.ssuckssuck.domain.group.service.GroupService;
 import moofarm.ssuckssuck.global.common.SubCategory;
 import org.springframework.data.domain.Slice;
@@ -25,15 +26,21 @@ public class GroupController {
         return groupService.createGroup(createGroupRequest);
     }
 
+    @Operation(summary = "그룹 정보 조회")
+    @GetMapping("/{groupId}")
+    public GroupResponse getGroupsBySubCategory(@PathVariable(value = "groupId") Long groupId) {
+        return groupService.getGroupProfile(groupId);
+    }
+
     @Operation(summary = "미션방 하위 카테고리 정보 조회")
     @GetMapping("/search/subCategory/{subCategory}/{pageNumber}")
-    public Slice<GroupResponse> getGroupsBySubCategory(@PathVariable(value = "subCategory") SubCategory subCategory, @PathVariable(value = "pageNumber") int pageNumber, @RequestParam(name = "sortBy", defaultValue = "createDate") String sortBy) {
+    public Slice<SearchGroupResponse> getGroupsBySubCategory(@PathVariable(value = "subCategory") SubCategory subCategory, @PathVariable(value = "pageNumber") int pageNumber, @RequestParam(name = "sortBy", defaultValue = "createDate") String sortBy) {
         return groupService.getGroupsBySubCategory(subCategory, pageNumber, sortBy);
     }
 
     @Operation(summary = "미션방 키워드 검색")
-    @GetMapping("/search/{pageNumber}/{keyword}")
-    public Slice<GroupResponse> getGroupsByKeyword(@PathVariable(value = "pageNumber") int pageNumber, @PathVariable(value = "keyword") String keyword) {
+    @GetMapping("/search/{keyword}/{pageNumber}")
+    public Slice<SearchGroupResponse> getGroupsByKeyword(@PathVariable(value = "pageNumber") int pageNumber, @PathVariable(value = "keyword") String keyword) {
         return groupService.getGroupsByKeyword(pageNumber,keyword);
     }
 }

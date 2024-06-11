@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moofarm.ssuckssuck.domain.avatar.domain.Avatar;
 import moofarm.ssuckssuck.domain.avatar.service.AvatarServiceUtils;
+import moofarm.ssuckssuck.domain.credential.service.CredentialServiceUtils;
 import moofarm.ssuckssuck.domain.oauth.domain.OauthMember;
 import moofarm.ssuckssuck.domain.oauth.domain.repository.OauthMemberRepository;
 import moofarm.ssuckssuck.domain.user.exception.NicknameDuplicationException;
@@ -36,6 +37,7 @@ public class UserService {
     private final OauthMemberRepository oauthMemberRepository;
     private final UserUtils userUtils;
     private final AvatarServiceUtils avatarServiceUtils;
+    private final CredentialServiceUtils credentialServiceUtils;
     private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
@@ -59,7 +61,8 @@ public class UserService {
         userRepository.save(user);
 
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
+
+        String refreshToken = credentialServiceUtils.generateRefreshToken(user.getId());
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);

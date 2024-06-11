@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "유저", description = "유저 관련 API")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -30,13 +30,13 @@ public class UserController {
     }
 
     @Operation(summary = "회원 정보 조회")
-    @GetMapping("/")
+    @GetMapping()
     public UserProfileResponse getUserProfile() {
         return userService.getUserProfile();
     }
 
     @Operation(summary = "관심사 수정")
-    @PatchMapping("/")
+    @PatchMapping()
     public UserProfileResponse updateCategory(@RequestBody @Valid UpdateCategoryRequest updateCategoryRequest) {
         return userService.updateCategory(updateCategoryRequest);
     }
@@ -47,8 +47,9 @@ public class UserController {
         userService.userWithdraw();
     }
 
+    @SecurityRequirements
     @Operation(summary = "닉네임 중복 확인")
-    @GetMapping("/nick/{nickname}")
+    @GetMapping("/nickname/{nickname}")
     public NicknameDuplicationResponse nicknameDuplication(@PathVariable String nickname) {
         return userService.isNicknameDuplicate(nickname);
     }
