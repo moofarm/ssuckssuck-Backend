@@ -21,7 +21,7 @@ public class CertificationLike {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "certificaion_id")
+    @JoinColumn(name = "certification_id")
     private Certification certification;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,5 +50,8 @@ public class CertificationLike {
                 .user(user)
                 .likeStatus(true)
                 .build();
+    }
+    public void updateLikeStatus(boolean likeStatus) {
+        this.likeStatus = likeStatus;
     }
 }
