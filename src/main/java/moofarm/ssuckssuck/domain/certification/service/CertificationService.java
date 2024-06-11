@@ -25,10 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CertificationService implements CertificationServiceUtils{
+
     private final CertificationRepository certificationRepository;
     private final UserUtils userUtils;
     private final GroupServiceUtils groupServiceUtils;
     private final MissionServiceUtils missionServiceUtils;
+
     //미션 인증
     @Transactional
     public CertificationResponse createCertification(Long missionId, Long groupId, CreateCertificationRequest createCertificationRequest) {
